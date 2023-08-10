@@ -2,20 +2,20 @@ public class Contact {
 
     /** Instance variables */
     protected String name;
-    protected int number;
+    protected String phoneNumber;
 
     /** Constructor */
-    public Contact (String name, int number) {
+    public Contact (String name, String phoneNumber) {
         this.name = name;
-        this.number = number;
+        this.phoneNumber = phoneNumber;
     }
 
     /** Getters */
     public String getName() {
         return this.name;
     }
-    public int getNumber() {
-        return this.number;
+    public String getNumber() {
+        return this.phoneNumber;
     }
 
     /** Setters */
@@ -23,7 +23,7 @@ public class Contact {
         this.name = name;
     }
 
-    public void setNumber(int number) {
-        this.number = number;
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 }
