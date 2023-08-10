@@ -1,7 +1,12 @@
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import util.Input;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class ContactMenu {
 
@@ -52,7 +57,6 @@ public class ContactMenu {
             }
         }
     }
-
     private static int contactMenu() {
         System.out.println("\n1. View contacts");
         System.out.println("2. Add a new contact");
@@ -62,8 +66,42 @@ public class ContactMenu {
         int menuOption = input.getInt("Please pick an option: ");
         return menuOption;
     }
+    private static void directoryAndFile() {
+        String directory = "data";
+        String fileName = "contacts.txt";
 
+        Path dataDirectory = Paths.get(directory);
+        Path dataFile = Paths.get(directory, fileName);
 
+        System.out.println(dataFile);
+
+        if(!Files.exists(dataDirectory)){
+            try {
+                Files.createDirectories(dataDirectory);
+            } catch (IOException e){
+                e.printStackTrace();
+            }
+        }
+
+        if(!Files.exists(dataFile)){
+            try {
+                Files.createFile(dataFile);
+            } catch (IOException e){
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private static ArrayList<String> getContactsFromFile(){
+        Path path = Paths.get("data/contacts.txt");
+        ArrayList<String> contacts = new ArrayList<>();
+        try {
+            contacts = (ArrayList<String>) Files.readAllLines(path);
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+        return contacts;
+    }
 
     public static void main(String[] args) {
 
@@ -89,6 +127,11 @@ public class ContactMenu {
 //                System.out.println("No contact found");
 //            }
 //        }
+
+
+        directoryAndFile();
+
+
         int menuResponse;
         do {
             menuResponse = contactMenu();
@@ -97,6 +140,7 @@ public class ContactMenu {
                     System.out.println("You picked 1");
                     // For now, contacts displayed are just in the ArrayList, not the file
                     System.out.println(contactList);
+                    System.out.println(getContactsFromFile());
                     break;
                 case 2:
                     System.out.println("You picked 2");
