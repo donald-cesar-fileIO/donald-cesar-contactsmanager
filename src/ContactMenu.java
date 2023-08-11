@@ -25,11 +25,11 @@ public class ContactMenu {
                     break;
                 }
             }
-        if (phoneNumber.length() != 10) {
-            System.out.println("Phone number must contain at least 10 digits");
+        if (phoneNumber.length() != 10 && phoneNumber.length() != 7) {
+            System.out.println("Phone number must contain at least 10 or 7 digits");
         }
 
-        } while (phoneNumber.length() != 10);
+        } while (phoneNumber.length() != 10 && phoneNumber.length() != 7) ;
 
         System.out.println("You entered: " + phoneNumber);
         contactList.add(new Contact(name, phoneNumber));
@@ -52,7 +52,7 @@ public class ContactMenu {
         String userResponse = input.getString("Enter contact's name to be deleted: ");
         System.out.println(contactList.size());
         for(Contact contact : contactList) {
-            if(contact.getName().contains(userResponse)) {
+            if(contact.getName().toLowerCase().contains(userResponse.toLowerCase())) {
                 System.out.println("Contact found: " + contact.getName() + " " + contact.getNumber());
                 contactList.remove(contact);
                 break;
@@ -145,8 +145,6 @@ public class ContactMenu {
          * To Do:
          *
          * Options within each switch-case method?? Bring back to menu or remain in current switch case??
-         *
-         * Search contact even with a lowerCase input??? (ie option 3)
          *
          *
          * General:
