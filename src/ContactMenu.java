@@ -118,6 +118,18 @@ public class ContactMenu {
         }
     }
 
+    private static void viewContacts (ArrayList<Contact> contactList) {
+        if (contactList.isEmpty()) {
+            System.out.println("No contacts found.");
+        } else {
+            System.out.format("Name | Phone Number %n");
+            System.out.format("------------------- %n");
+            for (Contact contact : contactList) {
+                System.out.format("%s | %s %n", contact.getName(), contact.getNumber());
+            }
+        }
+
+    }
 
     public static void main(String[] args) {
 
@@ -152,7 +164,7 @@ public class ContactMenu {
                 case 1:
                     System.out.println("You picked 1");
                     // Array...
-                    System.out.println(contactList);
+                    viewContacts (contactList);
 //                    System.out.println(getContactsFromFile());
                     break;
                 case 2:
