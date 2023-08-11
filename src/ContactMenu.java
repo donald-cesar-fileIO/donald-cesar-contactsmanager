@@ -125,14 +125,18 @@ public class ContactMenu {
          *
          * To Do:
          *
+         * If contacts.txt starts empty, we get an outOfBounce error
+         *
+         * Eliminate duplicated output to contacts.text after user exits application (current File.write writes current array elements plus existing ones)
+         * Array-outOfBounds if contacts.txt starts without any data.
+         *
+         *
          * Options within each switch-case method?? Bring back to menu or remain in current switch case??
          *
          * Eliminate unnecessary `sout` messages from each option (ie option 3)
          *
          * Search contact even with a lowerCase input??? (ie option 3)
          *
-         * Eliminate duplicated output to contacts.text after user exits application (current File.write writes current array elements plus existing ones)
-         * Array-outOfBounds if contacts.txt starts without any data.
          *
          * General:
          * Formatting, bonuses.
