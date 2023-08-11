@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -11,7 +12,7 @@ import java.nio.file.Paths;
 public class ContactMenu {
 
     private static Input input = new Input();
-    private static ArrayList<Contact> contactList = new ArrayList<>();
+    private static ArrayList<Contact> contactList = getContactsFromFile();
 
     private static void enterContact(ArrayList<Contact> contactList) {
         String name = input.getString("Enter your name? ");
@@ -48,7 +49,6 @@ public class ContactMenu {
     private static void deleteContact(ArrayList<Contact> contactList) {
         String userResponse = input.getString("Enter contact's name to be deleted: ");
         System.out.println(contactList.size());
-        Contact contactToDelete;
         for(Contact contact : contactList) {
             if(contact.getName().contains(userResponse)) {
                 System.out.println("Contact found: " + contact.getName() + " " + contact.getNumber());
@@ -91,17 +91,23 @@ public class ContactMenu {
             }
         }
     }
-
-    private static ArrayList<String> getContactsFromFile(){
-        Path path = Paths.get("data/contacts.txt");
-        ArrayList<String> contacts = new ArrayList<>();
+    private static ArrayList<Contact> getContactsFromFile(){
+        ArrayList<Contact> newContactList = new ArrayList<>(); // Creating a temporary arrayList of contacts (an array list of Object)
+        Path path = Paths.get("data/contacts.txt"); // Path object, path variable, and path method that points to the file.
+        ArrayList<String> stringList = new ArrayList<>(); // Creating a temporary arrayList of strings... to be able to communicate to data/contacts.txt file
         try {
-            contacts = (ArrayList<String>) Files.readAllLines(path);
+            stringList = (ArrayList<String>) Files.readAllLines(path); // populating the list with the lines from the file.
         } catch (IOException e){
             e.printStackTrace();
         }
-        return contacts;
+        for (String contact : stringList) { // iterating through the ArrayList<String>
+            String[] arr = contact.split(","); // per element (name & phone), we are splitting with the delimeter of choice.
+            Contact newGuy = new Contact(arr[0],arr[1]); // We are instantiating a new contact and initializing it with the previously split string.
+            newContactList.add(newGuy);
+        }
+        return newContactList;
     }
+
 
     public static void main(String[] args) {
 
@@ -131,21 +137,19 @@ public class ContactMenu {
 
         directoryAndFile();
 
-
         int menuResponse;
         do {
             menuResponse = contactMenu();
             switch (menuResponse) {
                 case 1:
                     System.out.println("You picked 1");
-                    // For now, contacts displayed are just in the ArrayList, not the file
+                    // Array...
                     System.out.println(contactList);
-                    System.out.println(getContactsFromFile());
+//                    System.out.println(getContactsFromFile());
                     break;
                 case 2:
                     System.out.println("You picked 2");
                     enterContact(contactList);
-
                     break;
                 case 3:
                     System.out.println("you picked 3");
