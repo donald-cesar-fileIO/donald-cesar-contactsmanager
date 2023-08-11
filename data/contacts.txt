@@ -1,9 +1,0 @@
-cesar, 1234567890
-cesar, 1234567890
-Donald Twitty,1234567890
-Epson EcoTank,0987654321
-cesar, 1234567890
-cesar, 1234567890
-Donald Twitty,1234567890
-Epson EcoTank,0987654321
-disName disLastName,0987654321

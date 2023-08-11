@@ -100,7 +100,9 @@ public class ContactMenu {
         }
         for (String contact : stringList) { // iterating through the ArrayList<String>
             String[] arr = contact.split(","); // per element (name & phone), we are splitting with the delimeter of choice.
-            Contact newGuy = new Contact(arr[0],arr[1]); // We are instantiating a new contact and initializing it with the previously split string.
+            String name = arr[0];
+            String number = arr[1];
+            Contact newGuy = new Contact(name, number.trim()); // We are instantiating a new contact and initializing it with the previously split string.
             newContactList.add(newGuy);
         }
         return newContactList;
