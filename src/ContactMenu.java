@@ -62,14 +62,18 @@ public class ContactMenu {
             Contact deletedContact = null;
             for (Contact contact : contactList) {
                 if (contact.getName().toLowerCase().contains(userResponse.toLowerCase())) {
-                    System.out.println("Contact deleted: " + contact.getName() + " | " + contact.getNumber());
+                    System.out.println("Contact found: " + contact.getName() + " | " + contact.getNumber());
                     contactExists = true;
                     deletedContact = contact;
                 }
             }
             if(!contactExists) {
                 System.out.println("No contact found");
-            } else contactList.remove(deletedContact);
+            } else {
+                if(input.yesNo("Are you sure you want to delete the contact [y/N]")) {
+                    contactList.remove(deletedContact);
+                }
+            }
 
         } while (input.yesNo("Do you want to delete another contact? [y/N]"));
     }
