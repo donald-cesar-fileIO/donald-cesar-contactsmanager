@@ -14,7 +14,7 @@ public class ContactMenu {
 
     private static void enterContact(ArrayList<Contact> contactList) {
         do {
-            System.out.println("Add a new contact: ");
+            System.out.println("Add a new contact... ");
             String name = input.getString("Enter contact's name: ");
             System.out.println("You entered: " + name);
             String phoneNumber;
@@ -34,39 +34,50 @@ public class ContactMenu {
             } while (phoneNumber.length() != 10 && phoneNumber.length() != 7);
 
             System.out.println("You entered: " + phoneNumber);
+            System.out.println("Contact added: \n" + name + " | " + phoneNumber);
             contactList.add(new Contact(name, phoneNumber));
         } while(input.yesNo("Do you want to add another contact? [y/N]"));
     }
     private static void findContact(ArrayList<Contact> contactList) {
-        String userResponse = input.getString("Enter contact name");
-//        Contact contactFound;
-        boolean contactExist = false;
-        for (Contact contact: contactList) {
-            if(contact.getName().toLowerCase().contains(userResponse.toLowerCase())) {
-                contactExist = true;
-                System.out.println("Contact found: " + contact.getName() + " " + contact.getNumber());
+        System.out.println("Search for a contact... ");
+        do {
+            String userResponse = input.getString("Enter contact's name: ");
+            boolean contactExist = false;
+            for (Contact contact : contactList) {
+                if (contact.getName().toLowerCase().contains(userResponse.toLowerCase())) {
+                    contactExist = true;
+                    System.out.println("Contact found: \n" + contact.getName() + " | " + contact.getNumber() + "\n");
+                }
             }
-        }
-        if(!contactExist) {
-            System.out.println("No contact found");
-        }
+            if (!contactExist) {
+                System.out.println("No contact found");
+            }
+        } while(input.yesNo("Do you want to look for another contact? [y/N]"));
     }
     private static void deleteContact(ArrayList<Contact> contactList) {
-        String userResponse = input.getString("Enter contact's name to be deleted: ");
-        System.out.println(contactList.size());
-        for(Contact contact : contactList) {
-            if(contact.getName().toLowerCase().contains(userResponse.toLowerCase())) {
-                System.out.println("Contact found: " + contact.getName() + " " + contact.getNumber());
-                contactList.remove(contact);
-                break;
+        System.out.println("Delete an existing contact...");
+        do {
+            String userResponse = input.getString("Enter contact's name to be deleted: ");
+            boolean contactExists = false;
+            Contact deletedContact = null;
+            for (Contact contact : contactList) {
+                if (contact.getName().toLowerCase().contains(userResponse.toLowerCase())) {
+                    System.out.println("Contact deleted: " + contact.getName() + " | " + contact.getNumber());
+                    contactExists = true;
+                    deletedContact = contact;
+                }
             }
-        }
+            if(!contactExists) {
+                System.out.println("No contact found");
+            } else contactList.remove(deletedContact);
+
+        } while (input.yesNo("Do you want to delete another contact? [y/N]"));
     }
     private static int contactMenu() {
         System.out.println("\n1. View contacts");
         System.out.println("2. Add a new contact");
         System.out.println("3. Search a contact by name");
-        System.out.println("4. Delete and existing contact");
+        System.out.println("4. Delete an existing contact");
         System.out.println("5. Exit");
         int menuOption = input.getInt("Please pick an option: ");
         return menuOption;
@@ -114,21 +125,25 @@ public class ContactMenu {
         }
         return newContactList;
     }
-
     private static void writeContactsToFile(ArrayList<Contact> contactList) {
-        Path path = Paths.get("data/contacts.txt");
-        ArrayList<String> strList = new ArrayList<>(); // Creating an List of strings... to be utilized to collect all formatted objects
-        for (Contact contact: contactList) {
-                    String txtString = contact.getName() + "," + contact.getNumber();
-                    strList.add(txtString);
+        boolean saveChanges = input.yesNo("Do you want to save your changes? [y/N]");
+        if (saveChanges) {
+            Path path = Paths.get("data/contacts.txt");
+            ArrayList<String> strList = new ArrayList<>(); // Creating an List of strings... to be utilized to collect all formatted objects
+            for (Contact contact : contactList) {
+                String txtString = contact.getName() + "," + contact.getNumber();
+                strList.add(txtString);
             }
-        try{
-            Files.write(path,strList);
-        }catch(IOException e){
-            e.printStackTrace();
+            try {
+                Files.write(path, strList);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            System.out.println("Changes saved, have a nice day!");
+        } else {
+            System.out.println("Have a nice day!");
         }
     }
-
     private static void viewContacts (ArrayList<Contact> contactList) {
         do {
             System.out.println("\nView Contacts: ");
@@ -141,25 +156,10 @@ public class ContactMenu {
                     System.out.format("%-20s | %-15s%n", contact.getName(), contact.getNumber());
                 }
             }
-        } while (!input.yesNo("back to main menu, enter [y]"));
+        } while (!input.yesNo("\nback to main menu, enter [y]"));
     }
-
-    public static void main(String[] args) {
-
-        /** General skeleton of `main` app:
-         *
-         * To Do:
-         *
-         * Options within each switch-case method?? Bring back to menu or remain in current switch case??
-         *
-         *
-         * General:
-         * Formatting, bonuses.
-         *
-         * */
-
+    private static void contactsApp() {
         directoryAndFile();
-
         int menuResponse;
         do {
             menuResponse = contactMenu();
@@ -168,25 +168,21 @@ public class ContactMenu {
                     viewContacts (contactList);
                     break;
                 case 2:
-                    System.out.println("You picked 2");
                     enterContact(contactList);
                     break;
                 case 3:
-                    System.out.println("you picked 3");
                     findContact(contactList);
                     break;
                 case 4:
-                    System.out.println("You picked 4");
                     deleteContact(contactList);
                     break;
             }
-
         } while (menuResponse != 5);
 
         writeContactsToFile(contactList);
+    }
 
-
-
-
+    public static void main(String[] args) {
+        contactsApp();
     }
 }
