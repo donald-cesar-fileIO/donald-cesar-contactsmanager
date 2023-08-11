@@ -110,13 +110,15 @@ public class ContactMenu {
 
     private static void writeContactsToFile(ArrayList<Contact> contactList) {
         Path path = Paths.get("data/contacts.txt");
+        ArrayList<String> strList = new ArrayList<>(); // Creating an List of strings... to be utilized to collect all formatted objects
         for (Contact contact: contactList) {
-            try {
                     String txtString = contact.getName() + "," + contact.getNumber();
-                    Files.write(path, Collections.singletonList(txtString), StandardOpenOption.APPEND);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+                    strList.add(txtString);
             }
+        try{
+            Files.write(path,strList);
+        }catch(IOException e){
+            e.printStackTrace();
         }
     }
 
@@ -165,9 +167,7 @@ public class ContactMenu {
             switch (menuResponse) {
                 case 1:
                     System.out.println("You picked 1");
-                    // Array...
                     viewContacts (contactList);
-//                    System.out.println(getContactsFromFile());
                     break;
                 case 2:
                     System.out.println("You picked 2");
