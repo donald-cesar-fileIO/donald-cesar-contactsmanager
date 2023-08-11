@@ -13,26 +13,29 @@ public class ContactMenu {
     private static ArrayList<Contact> contactList = getContactsFromFile();
 
     private static void enterContact(ArrayList<Contact> contactList) {
-        String name = input.getString("Enter your name? ");
-        System.out.println("You entered: " + name);
-        String phoneNumber;
-
         do {
-        phoneNumber = input.getString("Enter your phone number: ");
-        for (int i = 0; i < phoneNumber.length(); i++) {
-                if (!Character.isDigit(phoneNumber.charAt(i))) {
-                    System.out.println("Not a valid number");
-                    break;
+            System.out.println("Add a new contact: ");
+            String name = input.getString("Enter contact's name: ");
+            System.out.println("You entered: " + name);
+            String phoneNumber;
+
+            do {
+                phoneNumber = input.getString("Enter contact's phone number: ");
+                for (int i = 0; i < phoneNumber.length(); i++) {
+                    if (!Character.isDigit(phoneNumber.charAt(i))) {
+                        System.out.println("Not a valid number");
+                        break;
+                    }
                 }
-            }
-        if (phoneNumber.length() != 10 && phoneNumber.length() != 7) {
-            System.out.println("Phone number must contain at least 10 or 7 digits");
-        }
+                if (phoneNumber.length() != 10 && phoneNumber.length() != 7) {
+                    System.out.println("Phone number must contain at least 10 or 7 digits");
+                }
 
-        } while (phoneNumber.length() != 10 && phoneNumber.length() != 7) ;
+            } while (phoneNumber.length() != 10 && phoneNumber.length() != 7);
 
-        System.out.println("You entered: " + phoneNumber);
-        contactList.add(new Contact(name, phoneNumber));
+            System.out.println("You entered: " + phoneNumber);
+            contactList.add(new Contact(name, phoneNumber));
+        } while(input.yesNo("Do you want to add another contact? [y/N]"));
     }
     private static void findContact(ArrayList<Contact> contactList) {
         String userResponse = input.getString("Enter contact name");
@@ -127,15 +130,18 @@ public class ContactMenu {
     }
 
     private static void viewContacts (ArrayList<Contact> contactList) {
-        if (contactList.isEmpty()) {
-            System.out.println("No contacts found.");
-        } else {
-            System.out.format("%-20s | %-15s%n", "Name", "Phone Number");
-            System.out.format("%-20s | %-15s%n", "-------------------", "---------------");
-            for (Contact contact : contactList) {
-                System.out.format("%-20s | %-15s%n", contact.getName(), contact.getNumber());
+        do {
+            System.out.println("\nView Contacts: ");
+            if (contactList.isEmpty()) {
+                System.out.println("No contacts found.");
+            } else {
+                System.out.format("%-20s | %-15s%n", "Name", "Phone Number");
+                System.out.format("%-20s | %-15s%n", "-------------------", "---------------");
+                for (Contact contact : contactList) {
+                    System.out.format("%-20s | %-15s%n", contact.getName(), contact.getNumber());
+                }
             }
-        }
+        } while (!input.yesNo("back to main menu, enter [y]"));
     }
 
     public static void main(String[] args) {
@@ -159,7 +165,6 @@ public class ContactMenu {
             menuResponse = contactMenu();
             switch (menuResponse) {
                 case 1:
-                    System.out.println("You picked 1");
                     viewContacts (contactList);
                     break;
                 case 2:
