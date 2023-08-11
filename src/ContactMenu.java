@@ -13,53 +13,75 @@ public class ContactMenu {
     private static ArrayList<Contact> contactList = getContactsFromFile();
 
     private static void enterContact(ArrayList<Contact> contactList) {
-        String name = input.getString("Enter your name? ");
-        System.out.println("You entered: " + name);
-        String phoneNumber;
-
         do {
-        phoneNumber = input.getString("Enter your phone number: ");
-        for (int i = 0; i < phoneNumber.length(); i++) {
-                if (!Character.isDigit(phoneNumber.charAt(i))) {
-                    System.out.println("Not a valid number");
-                    break;
+            System.out.println("Add a new contact... ");
+            String name = input.getString("Enter contact's name: ");
+            System.out.println("You entered: " + name);
+            String phoneNumber;
+
+            do {
+                phoneNumber = input.getString("Enter contact's phone number: ");
+                for (int i = 0; i < phoneNumber.length(); i++) {
+                    if (!Character.isDigit(phoneNumber.charAt(i))) {
+                        System.out.println("Not a valid number");
+                        break;
+                    }
                 }
-            }
-        if (phoneNumber.length() != 10) {
-            System.out.println("Phone number must contain at least 10 digits");
-        }
+                if (phoneNumber.length() != 10 && phoneNumber.length() != 7) {
+                    System.out.println("Phone number must contain at least 10 or 7 digits");
+                }
 
-        } while (phoneNumber.length() != 10);
+            } while (phoneNumber.length() != 10 && phoneNumber.length() != 7);
 
-        System.out.println("You entered: " + phoneNumber);
-        contactList.add(new Contact(name, phoneNumber));
+            System.out.println("You entered: " + phoneNumber);
+            System.out.println("Contact added: \n" + name + " | " + phoneNumber);
+            contactList.add(new Contact(name, phoneNumber));
+        } while(input.yesNo("Do you want to add another contact? [y/N]"));
     }
     private static void findContact(ArrayList<Contact> contactList) {
-        String userResponse = input.getString("Enter contact name");
-        for (Contact contact: contactList) {
-            if(contact.getName().contains(userResponse)) {
-                System.out.println("Contact found: " + contact.getName() + " " + contact.getNumber());
-            } else {
+        System.out.println("Search for a contact... ");
+        do {
+            String userResponse = input.getString("Enter contact's name: ");
+            boolean contactExist = false;
+            for (Contact contact : contactList) {
+                if (contact.getName().toLowerCase().contains(userResponse.toLowerCase())) {
+                    contactExist = true;
+                    System.out.println("Contact found: \n" + contact.getName() + " | " + contact.getNumber() + "\n");
+                }
+            }
+            if (!contactExist) {
                 System.out.println("No contact found");
             }
-        }
+        } while(input.yesNo("Do you want to look for another contact? [y/N]"));
     }
     private static void deleteContact(ArrayList<Contact> contactList) {
-        String userResponse = input.getString("Enter contact's name to be deleted: ");
-        System.out.println(contactList.size());
-        for(Contact contact : contactList) {
-            if(contact.getName().contains(userResponse)) {
-                System.out.println("Contact found: " + contact.getName() + " " + contact.getNumber());
-                contactList.remove(contact);
-                break;
+        System.out.println("Delete an existing contact...");
+        do {
+            String userResponse = input.getString("Enter contact's name to be deleted: ");
+            boolean contactExists = false;
+            Contact deletedContact = null;
+            for (Contact contact : contactList) {
+                if (contact.getName().toLowerCase().contains(userResponse.toLowerCase())) {
+                    System.out.println("Contact found: " + contact.getName() + " | " + contact.getNumber());
+                    contactExists = true;
+                    deletedContact = contact;
+                }
             }
-        }
+            if(!contactExists) {
+                System.out.println("No contact found");
+            } else {
+                if(input.yesNo("Are you sure you want to delete the contact [y/N]")) {
+                    contactList.remove(deletedContact);
+                }
+            }
+
+        } while (input.yesNo("Do you want to delete another contact? [y/N]"));
     }
     private static int contactMenu() {
         System.out.println("\n1. View contacts");
         System.out.println("2. Add a new contact");
         System.out.println("3. Search a contact by name");
-        System.out.println("4. Delete and existing contact");
+        System.out.println("4. Delete an existing contact");
         System.out.println("5. Exit");
         int menuOption = input.getInt("Please pick an option: ");
         return menuOption;
@@ -100,93 +122,71 @@ public class ContactMenu {
         }
         for (String contact : stringList) { // iterating through the ArrayList<String>
             String[] arr = contact.split(","); // per element (name & phone), we are splitting with the delimeter of choice.
-            Contact newGuy = new Contact(arr[0],arr[1]); // We are instantiating a new contact and initializing it with the previously split string.
+            String name = arr[0];
+            String number = arr[1];
+            Contact newGuy = new Contact(name, number.trim()); // We are instantiating a new contact and initializing it with the previously split string.
             newContactList.add(newGuy);
         }
         return newContactList;
     }
-
     private static void writeContactsToFile(ArrayList<Contact> contactList) {
-        Path path = Paths.get("data/contacts.txt");
-        for (Contact contact: contactList) {
-            try {
-                    String txtString = contact.getName() + "," + contact.getNumber();
-                    Files.write(path, Collections.singletonList(txtString), StandardOpenOption.APPEND);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
-
-    private static void viewContacts (ArrayList<Contact> contactList) {
-        if (contactList.isEmpty()) {
-            System.out.println("No contacts found.");
-        } else {
-            System.out.format("Name | Phone Number %n");
-            System.out.format("------------------- %n");
+        boolean saveChanges = input.yesNo("Do you want to save your changes? [y/N]");
+        if (saveChanges) {
+            Path path = Paths.get("data/contacts.txt");
+            ArrayList<String> strList = new ArrayList<>(); // Creating an List of strings... to be utilized to collect all formatted objects
             for (Contact contact : contactList) {
-                System.out.format("%s | %s %n", contact.getName(), contact.getNumber());
+                String txtString = contact.getName() + "," + contact.getNumber();
+                strList.add(txtString);
             }
+            try {
+                Files.write(path, strList);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            System.out.println("Changes saved, have a nice day!");
+        } else {
+            System.out.println("Have a nice day!");
         }
-
     }
-
-    public static void main(String[] args) {
-
-        /** General skeleton of `main` app:
-         *
-         * To Do:
-         *
-         * If contacts.txt starts empty, we get an outOfBounce error
-         *
-         * Eliminate duplicated output to contacts.text after user exits application (current File.write writes current array elements plus existing ones)
-         * Array-outOfBounds if contacts.txt starts without any data.
-         *
-         *
-         * Options within each switch-case method?? Bring back to menu or remain in current switch case??
-         *
-         * Eliminate unnecessary `sout` messages from each option (ie option 3)
-         *
-         * Search contact even with a lowerCase input??? (ie option 3)
-         *
-         *
-         * General:
-         * Formatting, bonuses.
-         *
-         * */
-
+    private static void viewContacts (ArrayList<Contact> contactList) {
+        do {
+            System.out.println("\nView Contacts: ");
+            if (contactList.isEmpty()) {
+                System.out.println("No contacts found.");
+            } else {
+                System.out.format("%-20s | %-15s%n", "Name", "Phone Number");
+                System.out.format("%-20s | %-15s%n", "-------------------", "---------------");
+                for (Contact contact : contactList) {
+                    System.out.format("%-20s | %-15s%n", contact.getName(), contact.getNumber());
+                }
+            }
+        } while (!input.yesNo("\nback to main menu, enter [y]"));
+    }
+    private static void contactsApp() {
         directoryAndFile();
-
         int menuResponse;
         do {
             menuResponse = contactMenu();
             switch (menuResponse) {
                 case 1:
-                    System.out.println("You picked 1");
-                    // Array...
                     viewContacts (contactList);
-//                    System.out.println(getContactsFromFile());
                     break;
                 case 2:
-                    System.out.println("You picked 2");
                     enterContact(contactList);
                     break;
                 case 3:
-                    System.out.println("you picked 3");
                     findContact(contactList);
                     break;
                 case 4:
-                    System.out.println("You picked 4");
                     deleteContact(contactList);
                     break;
             }
-
         } while (menuResponse != 5);
 
         writeContactsToFile(contactList);
+    }
 
-
-
-
+    public static void main(String[] args) {
+        contactsApp();
     }
 }

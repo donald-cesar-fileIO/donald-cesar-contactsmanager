@@ -27,6 +27,15 @@ public class Contact {
         this.phoneNumber = phoneNumber;
     }
 
+//    public String formattedPhoneNumber () {
+//        String num = this.phoneNumber;
+//        if (num.length() == 10) {
+//            num = num.substring(0, 3) + "-" + num.substring(3, 6) + "-" + num.substring(6, num.length());
+//        } else {
+//            num = num.substring(0, 3) + "-" + num.substring(3, num.length());
+//        }
+//        return num;
+//    }
     public String toString() {
         return this.name + " | " + this.phoneNumber;
     }
