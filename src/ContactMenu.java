@@ -1,7 +1,5 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.nio.file.StandardOpenOption;
+import java.util.*;
 
 import util.Input;
 import java.io.IOException;
@@ -108,32 +106,38 @@ public class ContactMenu {
         return newContactList;
     }
 
+    private static void writeContactsToFile(ArrayList<Contact> contactList) {
+        Path path = Paths.get("data/contacts.txt");
+        for (Contact contact: contactList) {
+            try {
+                    String txtString = contact.getName() + "," + contact.getNumber();
+                    Files.write(path, Collections.singletonList(txtString), StandardOpenOption.APPEND);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
 
     public static void main(String[] args) {
 
-
-//        for (Contact contact: contactList) {
-//            System.out.println(contact.getName() + " " + contact.getNumber());
-//        }
-
-//        Contact newContact = enterContact();
-//        contactList.add(newContact);
-
-//        for (Contact contact: contactList) {
-//            System.out.println(contact.getName() + " " + contact.getNumber());
-//        }
-
-//        System.out.println("ArrayList: " + contactList);
-//        System.out.println(contactList.size());
-
-//        for (Contact contact: contactList) {
-//            if(contact.getName().contains("Don")) {
-//                System.out.println("Contact found: " + contact.getName() + " " + contact.getNumber());
-//            } else {
-//                System.out.println("No contact found");
-//            }
-//        }
-
+        /** General skeleton of `main` app:
+         *
+         * To Do:
+         *
+         * Options within each switch-case method?? Bring back to menu or remain in current switch case??
+         *
+         * Eliminate unnecessary `sout` messages from each option (ie option 3)
+         *
+         * Search contact even with a lowerCase input??? (ie option 3)
+         *
+         * Eliminate duplicated output to contacts.text after user exits application (current File.write writes current array elements plus existing ones)
+         * Array-outOfBounds if contacts.txt starts without any data.
+         *
+         * General:
+         * Formatting, bonuses.
+         *
+         * */
 
         directoryAndFile();
 
@@ -162,6 +166,8 @@ public class ContactMenu {
             }
 
         } while (menuResponse != 5);
+
+        writeContactsToFile(contactList);
 
 
 
