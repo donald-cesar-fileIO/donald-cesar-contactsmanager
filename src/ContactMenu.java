@@ -36,12 +36,16 @@ public class ContactMenu {
     }
     private static void findContact(ArrayList<Contact> contactList) {
         String userResponse = input.getString("Enter contact name");
+//        Contact contactFound;
+        boolean contactExist = false;
         for (Contact contact: contactList) {
-            if(contact.getName().contains(userResponse)) {
+            if(contact.getName().toLowerCase().contains(userResponse.toLowerCase())) {
+                contactExist = true;
                 System.out.println("Contact found: " + contact.getName() + " " + contact.getNumber());
-            } else {
-                System.out.println("No contact found");
             }
+        }
+        if(!contactExist) {
+            System.out.println("No contact found");
         }
     }
     private static void deleteContact(ArrayList<Contact> contactList) {
@@ -126,13 +130,12 @@ public class ContactMenu {
         if (contactList.isEmpty()) {
             System.out.println("No contacts found.");
         } else {
-            System.out.format("Name | Phone Number %n");
-            System.out.format("------------------- %n");
+            System.out.format("%-20s | %-15s%n", "Name", "Phone Number");
+            System.out.format("%-20s | %-15s%n", "-------------------", "---------------");
             for (Contact contact : contactList) {
-                System.out.format("%s | %s %n", contact.getName(), contact.getNumber());
+                System.out.format("%-20s | %-15s%n", contact.getName(), contact.getNumber());
             }
         }
-
     }
 
     public static void main(String[] args) {
@@ -141,15 +144,7 @@ public class ContactMenu {
          *
          * To Do:
          *
-         * If contacts.txt starts empty, we get an outOfBounce error
-         *
-         * Eliminate duplicated output to contacts.text after user exits application (current File.write writes current array elements plus existing ones)
-         * Array-outOfBounds if contacts.txt starts without any data.
-         *
-         *
          * Options within each switch-case method?? Bring back to menu or remain in current switch case??
-         *
-         * Eliminate unnecessary `sout` messages from each option (ie option 3)
          *
          * Search contact even with a lowerCase input??? (ie option 3)
          *
