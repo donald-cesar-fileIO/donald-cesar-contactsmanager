@@ -39,7 +39,7 @@ public class ContactMenu {
     }
     public static String formattedPhoneNumber (String numStr) {
         if (numStr.length() == 10) {
-            numStr= numStr.substring(0, 3) + "-" + numStr.substring(3, 6) + "-" + numStr.substring(6, numStr.length());
+            numStr= "(" + numStr.substring(0, 3) + ")" + " " + numStr.substring(3, 6) + "-" + numStr.substring(6, numStr.length());
         } else {
             numStr = numStr.substring(0, 3) + "-" + numStr.substring(3, numStr.length());
         }
